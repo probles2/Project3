@@ -1,0 +1,52 @@
+# main source file
+# ASCII Values:
+# "*" : 42
+# "+" : 43
+# "-" : 45
+# "=" : 61
+
+.org 0x10000000
+
+li $s0, 0xf0000000	# UART address
+li $sp, 0x10fffffc	# stack pointer address
+li $v0, 0
+li $t1, 0		# initialize register $t1 to 0
+li $t4, 1		# register $t4 will have a 1 for comparisons
+
+read_status: 
+	lw   $t1, 4($t0)		# accesing the status register (0xf0000004)
+	andi $t1, $t1, 0b10		# and $t1 with 0b10 to see if it's ready
+	beq  $t1, $0,  read_status	# branch until they are the same
+	nop
+
+recieve_buffer:	
+	lw   $t2, 8($t0) 		# load the most recent byte by the UART in 0xf0000008
+	sw   $t1, 0($t0)		# clear
+
+check_multiplication_sign:
+	li $s1 42
+	beq $t2 $s1 multiplication_sign
+	nop
+
+check_plus_sign:
+	li $s1 43
+	beq $t2 $s1 plus_sign
+	nop
+
+check_minus_sign:
+	li $s1 45
+	beq $t2 $s1 minus_sign
+	nop
+
+check_equal_sign:
+	li $s1 61
+	beq $t2 $s1 minus_sign
+	nop
+
+multiplication_sign:
+
+plus_sign:
+
+minus_sign:
+
+equal_sign:
